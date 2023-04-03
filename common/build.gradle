@@ -12,6 +12,7 @@ def fabric_loader_version = getConfig("fabric_loader_version")
 def jei_version = getConfig("jei_version")
 def rei_version = getConfig("rei_version")
 def kjs_version = getConfig("kjs_version")
+def emi_version = getConfig("emi_version")
 
 
 loom {
@@ -51,6 +52,10 @@ dependencies {
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
 
+    // EMI
+    modCompileOnly("dev.emi:emi:${emi_version}:api")
+    modCompileOnly("dev.emi:emi:${emi_version}")
+
     // KJS
     modCompileOnly("dev.latvian.mods:kubejs-fabric:${kjs_version}")
 }
@@ -58,7 +63,7 @@ dependencies {
 publishing {
     publications {
         mavenCommon(MavenPublication) {
-            artifactId = rootProject.mod_id
+            artifactId = archivesBaseName
             from components.java
         }
     }

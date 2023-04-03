@@ -9,6 +9,7 @@ import com.lowdragmc.lowdraglib.gui.editor.configurator.ConfiguratorGroup;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,6 +47,17 @@ public class ConfiguratorParser {
                 continue;
             }
             if (field.isAnnotationPresent(Configurable.class)) {
+                // sub configurable
+                var rawClass = field.getDeclaringClass();
+                if (rawClass.isAnnotationPresent(Configurable.class) && rawClass.getAnnotation(Configurable.class).subConfigurable()) {
+                    try {
+                        var value = field.get(object);
+                        if (value != null) {
+                            createConfigurators(father, new HashMap<>(), field.getDeclaringClass(), value);
+                            continue;
+                        }
+                    } catch (IllegalAccessException ignored) {}
+                }
                 Configurable configurable = field.getAnnotation(Configurable.class);
                 IConfiguratorAccessor accessor = ConfiguratorAccessors.findByType(field.getGenericType());
                 field.setAccessible(true);
